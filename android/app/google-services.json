@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "293669249461",
+    "project_id": "authentication-d5243",
+    "storage_bucket": "authentication-d5243.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293669249461:android:5aee898355bbf67f0ef9fc",
+        "android_client_info": {
+          "package_name": "com.example.aunth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcRWr_TU-aVgIVu_vJ7D-TZ6lEOG_eRf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
