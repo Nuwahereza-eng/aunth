@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddNewTask extends StatefulWidget {
   const AddNewTask({super.key});
@@ -14,7 +17,7 @@ class _AddNewTaskState extends State<AddNewTask> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   DateTime selectedDate = DateTime.now();
-  // Color _selectedColor = Colors.blue;
+  Color _selectedColor = Colors.blue;
   File? file;
 
   @override
@@ -22,6 +25,19 @@ class _AddNewTaskState extends State<AddNewTask> {
     titleController.dispose();
     descriptionController.dispose();
     super.dispose();
+  }
+  Future<void>uploadTaskToDb() async{
+    final data=await FirebaseFirestore.instance.collection('tasks').add({
+      'title': titleController.text,
+      'userId': FirebaseAuth.instance.currentUser!.uid,
+      'description': descriptionController.text,
+      'postedAtTime': FieldValue.serverTimestamp(),
+      'date': selectedDate,
+      'color': rgbToHex(_selectedColor),
+      
+      // 'image': file != null ? await uploadImage(file!) : null,
+    });
+    print(data.id);
   }
 
   @override
@@ -113,7 +129,7 @@ class _AddNewTaskState extends State<AddNewTask> {
                 color: Colors.blue,
                 onColorChanged: (Color color) {
                   setState(() {
-                    // _selectedColor = color;
+                     _selectedColor = color;
                   });
                 },
                 heading: const Text('Select color'),
@@ -121,7 +137,10 @@ class _AddNewTaskState extends State<AddNewTask> {
               ),
               const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await uploadTaskToDb();
+                  Navigator.pop(context);
+                },
                 child: const Text(
                   'SUBMIT',
                   style: TextStyle(
