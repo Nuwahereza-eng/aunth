@@ -63,11 +63,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     return Row(
                       children: [
                         Expanded(
-                          child: TaskCard(
-                            color: hexToColor(task['color']),
-                            headerText: task['title'],
-                            descriptionText: task['description'],
-                            scheduledDate: task['date'].toString(),
+                          child: Dismissible(
+                            key: Key(task.id),
+                            onDismissed: (direction) {
+                              FirebaseFirestore.instance.collection('tasks').doc(task.id).delete();
+                            },
+                            child: TaskCard(
+                              color: hexToColor(task['color']),
+                              headerText: task['title'],
+                              descriptionText: task['description'],
+                              scheduledDate: task['date'].toString(),
+                            ),
                           ),
                         ),
                         Container(
