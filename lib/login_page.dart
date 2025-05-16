@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:aunth/signup_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   static route() => MaterialPageRoute(
@@ -21,6 +22,16 @@ class _LoginPageState extends State<LoginPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+  Future<void> signInWithEmailAndPassword() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      print('Error signing in: ${e.message}');
+    }
   }
 
   @override
@@ -58,7 +69,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await signInWithEmailAndPassword();
+                },
                 child: const Text(
                   'SIGN IN',
                   style: TextStyle(

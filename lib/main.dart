@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:aunth/signup_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:aunth/firebase_options.dart';
+import 'package:aunth/login_page.dart';
+import 'package:aunth/home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -45,7 +50,18 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const SignUpPage(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData) {
+            return const MyHomePage();
+          }
+          return const LoginPage();
+        },
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:aunth/login_page.dart';
 
@@ -21,6 +22,19 @@ class _SignUpPageState extends State<SignUpPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> createUserWithEmailAndPassword() async {
+    try {
+      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      print ('User created: ${userCredential.user?.email}');
+    } on FirebaseAuthException catch(e) {
+      print('Error creating user: ${e.message}');
+      
+    }
   }
 
   @override
@@ -58,7 +72,10 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async{
+                  await createUserWithEmailAndPassword();
+
+                },
                 child: const Text(
                   'SIGN UP',
                   style: TextStyle(
